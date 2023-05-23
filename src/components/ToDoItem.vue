@@ -21,6 +21,13 @@ export default {
     toggleToItemEditForm() {
       this.isEditing = true;
     },
+    itemEdited(newLabel) {
+      this.$emit("item-edited", newLabel);
+      this.isEditing = false;
+    },
+    editCancelled() {
+      this.isEditing = false;
+    },
   },
   computed: {
     isDone() {
