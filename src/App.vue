@@ -2,9 +2,15 @@
   <div id="app">
     <h1>To Do List</h1>
     <to-do-form @todo-added="addToDo"></to-do-form>
+    <h2 id="list-summary">{{ listSummary }}</h2>
     <ul aria-labelledby="list-summary" class="stack-large">
       <li v-for="item in ToDoItems" :key="item.id">
-        <to-do-item :label="item.label" :done="item.done" :id="item.id">
+        <to-do-item
+          :label="item.label"
+          :done="item.done"
+          :id="item.id"
+          @checkbox-changed="updateDoneStatus(item.id)"
+        >
         </to-do-item>
       </li>
     </ul>
@@ -26,7 +32,7 @@ export default {
       ToDoItems: [
         { id: uniqueId("todo-"), label: "learn vue", done: false },
         { id: uniqueId("todo-"), label: "learn vue2", done: false },
-        { id: uniqueId("todo-"), label: "learn vue3", done: true },
+        { id: uniqueId("todo-"), label: "learn vue3", done: false },
       ],
     };
   },
@@ -38,6 +44,19 @@ export default {
         label: toDoLabel,
         done: false,
       });
+    },
+    updateDoneStatus(toDoId) {
+      const updateToDoItem = this.ToDoItems.find((item) => item.id === toDoId);
+      console.log(updateToDoItem.label);
+      updateToDoItem.done = !updateToDoItem.done;
+    },
+  },
+  computed: {
+    listSummary() {
+      const noOfFinshedItems = this.ToDoItems.filter(
+        (item) => item.done
+      ).length;
+      return `${noOfFinshedItems} out of ${this.ToDoItems.length} items completed`;
     },
   },
 };
