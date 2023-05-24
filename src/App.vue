@@ -55,13 +55,6 @@ export default {
   background-color: lightgrey;
 }
 
-.search-input {
-  flex: 0 0 100%;
-  height: 2.4rem;
-  margin-top: 0.5rem;
-  padding: 0.3rem 0.6rem;
-  border: 2px solid #565656;
-}
 .btn {
   padding: 0.8rem 1rem 0.7rem;
   border: 0.2rem solid #4d4d4d;

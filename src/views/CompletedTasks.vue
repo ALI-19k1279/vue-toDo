@@ -1,7 +1,7 @@
 <template>
   <div>
-    <h2>Completed Tasks</h2>
-    <ul class="task-list">
+    <h3>Completed Tasks</h3>
+    <ul aria-labelledby="list-summary" class="stack-large">
       <li v-for="item in completedItems" :key="item.id">
         <to-do-item
           :label="item.label || 'null'"
