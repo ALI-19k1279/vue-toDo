@@ -2,16 +2,16 @@
   <div id="app">
     <h1>To Do List</h1>
     <to-do-form @todo-added="addToDo"></to-do-form>
-    <h2 id="list-summary">{{ listSummary }}</h2>
+    <h2 id="list-summary">{{ store.listSummary }}</h2>
     <ul aria-labelledby="list-summary" class="stack-large">
-      <li v-for="item in ToDoItems" :key="item.id">
+      <li v-for="item in store.allItems" :key="item.id">
         <to-do-item
           :label="item.label"
           :done="item.done"
           :id="item.id"
-          @checkbox-changed="updateDoneStatus(item.id)"
-          @item-deleted="deleteToDo(item.id)"
-          @item-edited="editToDo(item.id, $event)"
+          @checkbox-changed="store.updateDoneStatus(item.id)"
+          @item-deleted="store.deleteToDo(item.id)"
+          @item-edited="store.editToDo(item.id, $event)"
         >
         </to-do-item>
       </li>
@@ -21,8 +21,8 @@
 
 <script>
 import ToDoItem from "./components/ToDoItem.vue";
-import uniqueId from "lodash.uniqueid";
 import ToDoForm from "./components/ToDoForm.vue";
+import { useToDoStore } from "./stores/toDoStore";
 
 export default {
   name: "App",
@@ -30,45 +30,15 @@ export default {
     ToDoItem,
     ToDoForm,
   },
-  data() {
-    return {
-      ToDoItems: [
-        { id: uniqueId("todo-"), label: "learn vue", done: false },
-        { id: uniqueId("todo-"), label: "learn vue2", done: false },
-        { id: uniqueId("todo-"), label: "learn vue3", done: false },
-      ],
+  setup() {
+    const store = useToDoStore();
+    const addToDo = (toDoLabel) => {
+      store.addToDo(toDoLabel);
     };
-  },
-  methods: {
-    addToDo(toDoLabel) {
-      console.log("to do added", toDoLabel);
-      this.ToDoItems.push({
-        id: uniqueId("todo-"),
-        label: toDoLabel,
-        done: false,
-      });
-    },
-    updateDoneStatus(toDoId) {
-      const updateToDoItem = this.ToDoItems.find((item) => item.id === toDoId);
-      console.log(updateToDoItem.label);
-      updateToDoItem.done = !updateToDoItem.done;
-    },
-    deleteToDo(toDoId) {
-      const itemIndex = this.ToDoItems.findIndex((item) => item.id === toDoId);
-      this.ToDoItems.splice(itemIndex, 1);
-    },
-    editToDo(toDoId, newLabel) {
-      const toDoToEdit = this.ToDoItems.find((item) => item.id === toDoId);
-      toDoToEdit.label = newLabel;
-    },
-  },
-  computed: {
-    listSummary() {
-      const noOfFinshedItems = this.ToDoItems.filter(
-        (item) => item.done
-      ).length;
-      return `${noOfFinshedItems} out of ${this.ToDoItems.length} items completed`;
-    },
+    return {
+      store,
+      addToDo,
+    };
   },
 };
 </script>
