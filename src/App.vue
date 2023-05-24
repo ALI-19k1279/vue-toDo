@@ -1,50 +1,67 @@
 <template>
   <div id="app">
+    <div class="view-selector">
+      <router-link to="/" class="btn btn__filter"> All Tasks </router-link>
+      <router-link to="/pending" class="btn btn__filter">
+        Pending Tasks
+      </router-link>
+      <router-link to="/completed" class="btn btn__filter">
+        Completed Tasks
+      </router-link>
+    </div>
     <h1>To Do List</h1>
     <to-do-form @todo-added="addToDo"></to-do-form>
     <h2 id="list-summary">{{ store.listSummary }}</h2>
-    <ul aria-labelledby="list-summary" class="stack-large">
-      <li v-for="item in store.allItems" :key="item.id">
-        <to-do-item
-          :label="item.label"
-          :done="item.done"
-          :id="item.id"
-          @checkbox-changed="store.updateDoneStatus(item.id)"
-          @item-deleted="store.deleteToDo(item.id)"
-          @item-edited="store.editToDo(item.id, $event)"
-        >
-        </to-do-item>
-      </li>
-    </ul>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import ToDoItem from "./components/ToDoItem.vue";
 import ToDoForm from "./components/ToDoForm.vue";
 import { useToDoStore } from "./stores/toDoStore";
 
 export default {
   name: "App",
   components: {
-    ToDoItem,
     ToDoForm,
   },
-  setup() {
-    const store = useToDoStore();
-    const addToDo = (toDoLabel) => {
-      store.addToDo(toDoLabel);
-    };
+  data() {
     return {
-      store,
-      addToDo,
+      store: useToDoStore(),
     };
+  },
+  methods: {
+    addToDo(addToDoLabel) {
+      this.store.addToDo(addToDoLabel);
+    },
   },
 };
 </script>
 
 <style>
 /* Global styles */
+.view-selector {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.view-selector button {
+  flex: 1 1 auto;
+  margin-right: 0.5rem;
+}
+
+.view-selector .active {
+  background-color: lightgrey;
+}
+
+.search-input {
+  flex: 0 0 100%;
+  height: 2.4rem;
+  margin-top: 0.5rem;
+  padding: 0.3rem 0.6rem;
+  border: 2px solid #565656;
+}
 .btn {
   padding: 0.8rem 1rem 0.7rem;
   border: 0.2rem solid #4d4d4d;
